@@ -8,7 +8,6 @@ import { computeEdgeMap } from "./lasso/edges";
 import { LassoEngine, pathFromParent } from "./lasso/lassoClient";
 import type { Tool } from "./Toolbar";
 import { ColorRangePanel } from "./ColorRangePanel";
-import { PerfHud } from "./PerfHud";
 import { recordPaint } from "./perf";
 
 export type Mode = "preview" | "edit";
@@ -1680,32 +1679,13 @@ export function CanvasView({
       onDoubleClick={onDoubleClick}
     >
       <canvas ref={canvasRef} />
-      <PerfHud />
-      {!id && <div className="placeholder">Select a mask from the sidebar</div>}
+      {!id && <div className="placeholder">Выберите изображение</div>}
       {error && <div className="placeholder" style={{ color: "#f88" }}>{error}</div>}
       {orig && mask && (
         <div className="canvas-hud">
-          <span>{id}</span>
+          <span>{mask.width}×{mask.height}</span>
           <span>·</span>
-          <span>
-            {mask.width}×{mask.height}
-            {(orig.naturalWidth !== mask.width || orig.naturalHeight !== mask.height) &&
-              ` (orig ${orig.naturalWidth}×${orig.naturalHeight})`}
-          </span>
-          <span>·</span>
-          <span>mask: {maskSource}</span>
-          <span>·</span>
-          <span>phases: {mask.phases.length}</span>
-          {components && (<><span>·</span><span>regions: {components.count}</span></>)}
-          <span>·</span>
-          <span>
-            mode: {
-              spaceHeld
-                ? (mode === "preview" ? "orig (space)" : "mask (space)")
-                : mode
-            }
-          </span>
-          {mode === "edit" && (<><span>·</span><span>tool: {tool}</span></>)}
+          <span>фаз: {mask.phases.length}</span>
         </div>
       )}
       {mode === "edit" && tool === "colorrange" && (

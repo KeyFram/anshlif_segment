@@ -264,7 +264,7 @@ export function ProjectView() {
                 </div>
               )}
               {view.segmentTarget && !falOn && view.status === "new" && (
-                <div className="seg-bar"><span className="seg-err">fal не настроен (нет ключа)</span></div>
+                <div className="seg-bar"><span className="seg-err">Сегментация сейчас недоступна</span></div>
               )}
             </>
           )}
@@ -306,9 +306,8 @@ export function ProjectView() {
           title="Запустить сегментацию?"
           message={
             <>
-              Будет отправлено <b>{confirm.count}</b> изображени{plural(confirm.count)} в fal —
-              это <b>{confirm.count}</b> платных вызовов (≈ {estMinutes(confirm.count)} мин).
-              Ничего не запускается автоматически: подтвердите, что хотите обработать именно столько.
+              Обработать <b>{confirm.count}</b> изображени{plural(confirm.count)}?
+              Это займёт ≈ {estMinutes(confirm.count)} мин.
             </>
           }
           confirmLabel={`Запустить (${confirm.count})`}

@@ -47,7 +47,7 @@ export function Hub() {
           <span className="hub-logo">◆</span>
           <div>
             <h1>Сегментация аншлифов</h1>
-            <span className="hub-sub">Норникель · комплексное решение</span>
+            <span className="hub-sub">Сегментация минеральных фаз аншлифов</span>
           </div>
         </div>
         <DomainTabs value={domain} onChange={setDomain} />

@@ -45,10 +45,10 @@ export function Toolbar({
   phases, targetPhaseIdx, onTargetPhase,
 }: Props) {
   const saveLabel =
-    saveState === "saving" ? "Saving…" :
-    saveState === "saved"  ? "Saved ✓" :
-    saveState === "error"  ? "Save failed" :
-                             "Auto-save on";
+    saveState === "saving" ? "Сохранение…" :
+    saveState === "saved"  ? "Сохранено ✓" :
+    saveState === "error"  ? "Ошибка сохранения" :
+                             "Автосохранение";
 
   const isEdit = mode === "edit";
   const clampPct = (v: number) => Math.max(0, Math.min(100, Math.round(v)));
@@ -78,32 +78,32 @@ export function Toolbar({
       {isEdit && (
         <>
           <div className="sep" />
-          <div className="seg" title="Active tool">
+          <div className="seg" title="Инструмент">
             <button
               className={tool === "cursor" ? "active" : ""}
               onClick={() => onToolChange("cursor")}
-              title="Cursor (V) — click a region to reassign its phase"
+              title="Курсор (V) — клик по области, чтобы сменить её фазу"
             >
               ↖
             </button>
             <button
               className={tool === "lasso" ? "active" : ""}
               onClick={() => onToolChange("lasso")}
-              title="Magnetic lasso (L) — trace an edge to cut an area"
+              title="Магнитное лассо (L) — обвести границу, чтобы вырезать область"
             >
               ◌
             </button>
             <button
               className={tool === "wand" ? "active" : ""}
               onClick={() => onToolChange("wand")}
-              title="Magic wand (W) — hover to preview, Shift+wheel to adjust, click to select"
+              title="Волшебная палочка (W) — наведи для превью, Shift+колесо — порог, клик — выделить"
             >
               ✦
             </button>
             <button
               className={tool === "brush" ? "active" : ""}
               onClick={() => onToolChange("brush")}
-              title="Brush / pencil (B) — paint with the target phase; Shift+wheel to resize"
+              title="Кисть (B) — красит целевой фазой; Shift+колесо — размер"
             >
               ✎
             </button>
@@ -148,7 +148,7 @@ export function Toolbar({
       {isEdit && tool === "wand" && (
         <>
           <div className="sep" />
-          <div className="wand-thresh" title="Selection threshold (Shift+wheel over the canvas)">
+          <div className="wand-thresh" title="Порог выделения (Shift+колесо над холстом)">
             <span className="lbl">Порог</span>
             <input
               type="range" min={0} max={100} step={1}
@@ -193,7 +193,7 @@ export function Toolbar({
       {isEdit && tool === "brush" && (
         <>
           <div className="sep" />
-          <div className="wand-thresh" title="Brush size (Shift+wheel over the canvas)">
+          <div className="wand-thresh" title="Размер кисти (Shift+колесо над холстом)">
             <span className="lbl">Размер</span>
             <input
               type="range" min={BRUSH_MIN} max={BRUSH_MAX} step={1}
@@ -210,31 +210,31 @@ export function Toolbar({
       )}
 
       <div className="sep" />
-      <button className="tb-btn" disabled={!canUndo} onClick={onUndo} title="Undo (Ctrl+Z)">↶</button>
-      <button className="tb-btn" disabled={!canRedo} onClick={onRedo} title="Redo (Ctrl+Shift+Z)">↷</button>
+      <button className="tb-btn" disabled={!canUndo} onClick={onUndo} title="Отменить (Ctrl+Z)">↶</button>
+      <button className="tb-btn" disabled={!canRedo} onClick={onRedo} title="Повторить (Ctrl+Shift+Z)">↷</button>
 
       <div className="sep" />
       <button
         className={"tb-text" + (saveState === "saved" ? " ok" : saveState === "error" ? " err" : "")}
         onClick={onSave}
         disabled={!canSave || saveState === "saving"}
-        title="Saved automatically on every change — click to save now (Ctrl+S)"
+        title="Сохраняется автоматически при каждом изменении — клик, чтобы сохранить сейчас (Ctrl+S)"
       >
         {saveLabel}
       </button>
 
       <span className="tb-hint">
         {isEdit && tool === "lasso"
-          ? <>Click to add seeds · click first seed to close · <kbd>Shift</kbd>+wheel: snap contrast · <kbd>Esc</kbd> cancel</>
+          ? <>Клик — ставить точки · клик по первой — замкнуть · <kbd>Shift</kbd>+колесо — контраст · <kbd>Esc</kbd> — отмена</>
           : isEdit && tool === "wand"
-          ? <>Hover to preview · <kbd>Shift</kbd>+wheel to adjust · click to select</>
+          ? <>Наведи для превью · <kbd>Shift</kbd>+колесо — порог · клик — выделить</>
           : isEdit && tool === "brush"
-          ? <>Drag to paint the target phase · <kbd>Shift</kbd>+wheel to resize · hold <kbd>Space</kbd> to peek</>
+          ? <>Тяни, чтобы красить целевой фазой · <kbd>Shift</kbd>+колесо — размер · <kbd>Space</kbd> — заглянуть</>
           : isEdit && tool === "colorrange"
           ? <>Пипетками кликай по цветам · панель справа · <kbd>Shift</kbd>+<kbd>Space</kbd> скрыть выделение</>
           : isEdit
-          ? <>Click a region to reassign its phase · hold <kbd>Space</kbd> to peek at the mask</>
-          : <>Hold <kbd>Space</kbd> to peek at the original</>}
+          ? <>Клик по области — сменить её фазу · <kbd>Space</kbd> — заглянуть под маску</>
+          : <>Удерживай <kbd>Space</kbd>, чтобы посмотреть оригинал</>}
       </span>
     </div>
   );
