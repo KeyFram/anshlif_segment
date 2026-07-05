@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Отчёт классификации руды</title>
+<style>
+  /* ==== Фирменная палитра Норникель ==== */
+  :root{
+    --violet:#5B2FE0;      /* основной фиолет */
+    --violet-2:#7B4DFF;
+    --mint:#3DE0B0;        /* мятно-бирюзовый */
+    --mint-2:#6FF0C8;
+    --ink:#1B1C33;         /* тёмный текст */
+    --ink-2:#565A7A;       /* вторичный текст */
+    --line:#E6E8F0;
+    --bg-card:#FFFFFF;
+    --page:#F4F6FA;
+    /* цвета фаз = цвета маски */
+    --c-common:#22B573;    /* обычные срастания — зелёный */
+    --c-thin:#E8465B;      /* тонкие срастания — красный */
+    --c-talc:#3B82F6;      /* тальк — синий */
+    --c-magn:#3A3E55;      /* магнетит — тёмно-серый */
+    --c-silic:#C7CEDB;     /* силикат — светло-серый */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--page);font-family:'Segoe UI',Inter,Arial,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  /* ==== Лист A4 ==== */
+  @page{size:A4 portrait;margin:0}
+  .sheet{
+    width:210mm;min-height:297mm;margin:0 auto;background:var(--page);
+    padding:11mm 12mm 9mm;position:relative;overflow:hidden;
+  }
+  /* декоративный мятный градиент-акцент в углу */
+  .sheet::before{
+    content:"";position:absolute;top:-90mm;right:-70mm;width:180mm;height:180mm;
+    background:radial-gradient(circle at 50% 50%,rgba(61,224,176,.55),rgba(61,224,176,0) 62%);
+    z-index:0;
+  }
+  .sheet::after{
+    content:"";position:absolute;bottom:-70mm;left:-60mm;width:140mm;height:140mm;
+    background:radial-gradient(circle at 50% 50%,rgba(91,47,224,.14),rgba(91,47,224,0) 65%);
+    z-index:0;
+  }
+  .layer{position:relative;z-index:1}
+
+  /* ==== Хедер ==== */
+  header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6mm}
+  .brand{display:flex;align-items:center;gap:9px}
+  .logo{width:34px;height:34px;flex:none}
+  .brand .name{font-weight:800;letter-spacing:.5px;font-size:15px;color:var(--ink)}
+  .brand .sub{font-size:9px;color:var(--ink-2);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
+  .doc-meta{text-align:right;font-size:9.5px;color:var(--ink-2);line-height:1.7}
+  .doc-meta b{color:var(--ink)}
+
+  h1.title{font-size:20px;font-weight:800;letter-spacing:.2px;margin-bottom:2px}
+  .title-line{width:46px;height:4px;border-radius:3px;background:linear-gradient(90deg,var(--mint),var(--violet));margin-bottom:6mm}
+
+  /* ==== Hero-результат ==== */
+  .hero{
+    display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:16px;
+    background:linear-gradient(120deg,var(--violet),var(--violet-2));color:#fff;margin-bottom:6mm;
+    box-shadow:0 8px 22px rgba(91,47,224,.22);
+  }
+  .hero .verdict-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+  .hero .verdict{font-size:23px;font-weight:800;line-height:1.05;margin-top:2px}
+  .hero .verdict-sub{font-size:10.5px;opacity:.9;margin-top:5px;max-width:95mm}
+  .hero .conf{margin-left:auto;text-align:center;flex:none}
+  .hero .conf .n{font-size:30px;font-weight:800;line-height:1}
+  .hero .conf .l{font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;opacity:.85;margin-top:3px}
+
+  /* ==== KPI ряд ==== */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:6mm}
+  .kpi{background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+  .kpi .k-lab{font-size:8.5px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.6px;line-height:1.3}
+  .kpi .k-val{font-size:22px;font-weight:800;margin-top:5px}
+  .kpi .k-val small{font-size:12px;font-weight:700;color:var(--ink-2)}
+  .kpi .k-bar{height:4px;border-radius:3px;background:var(--line);margin-top:7px;overflow:hidden}
+  .kpi .k-bar > i{display:block;height:100%;border-radius:3px}
+
+  /* ==== Сетка карточек ==== */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .card{background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+  .card h3{font-size:11px;font-weight:700;letter-spacing:.3px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+  .card h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--mint)}
+  .card.wide{grid-column:1 / -1}
+
+  /* легенда */
+  .legend{display:flex;flex-wrap:wrap;gap:9px 14px;font-size:9px;color:var(--ink-2)}
+  .legend .li{display:flex;align-items:center;gap:5px}
+  .legend .sw{width:10px;height:10px;border-radius:3px;flex:none}
+  .legend b{color:var(--ink);font-weight:600}
+
+  /* горизонтальные бары состава */
+  .rows{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+  .row{display:grid;grid-template-columns:78px 1fr 40px;align-items:center;gap:8px;font-size:9.5px}
+  .row .rl{color:var(--ink-2)}
+  .row .track{height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+  .row .track > i{display:block;height:100%;border-radius:6px}
+  .row .rv{text-align:right;font-weight:700;font-size:10px}
+
+  /* дерево решения */
+  .flow{display:flex;align-items:stretch;gap:8px}
+  .node{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:9px 10px;font-size:9px;color:var(--ink-2);position:relative;background:#fff}
+  .node .q{font-weight:700;color:var(--ink);font-size:9.5px;margin-bottom:3px}
+  .node.active{border-color:var(--violet);background:rgba(91,47,224,.05)}
+  .node.result{border-color:var(--c-thin);background:rgba(232,70,91,.06)}
+  .node .tag{position:absolute;top:-8px;left:10px;font-size:7.5px;background:#fff;padding:0 5px;color:var(--ink-2);letter-spacing:.5px}
+  .arrow{align-self:center;color:var(--violet);font-weight:800;font-size:13px}
+
+  .stat-note{font-size:8.5px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+
+  /* gauge подпись */
+  .gauge-wrap{display:flex;align-items:center;gap:14px}
+  .gauge-num{font-size:11px;color:var(--ink-2);line-height:1.6}
+  .gauge-num b{font-size:15px;color:var(--ink)}
+
+  /* заключение */
+  .verdict-box{background:linear-gradient(120deg,rgba(61,224,176,.16),rgba(91,47,224,.10));
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:10.5px;line-height:1.55;color:var(--ink)}
+  .verdict-box b{color:var(--violet)}
+
+  footer{display:flex;justify-content:space-between;align-items:center;margin-top:6mm;padding-top:6px;border-top:1px solid var(--line);font-size:8px;color:var(--ink-2)}
+  footer .mono{font-family:'Consolas',monospace}
+</style>
+</head>
+<body>
+<div class="sheet">
+ <div class="layer">
+
+  <!-- ================= ХЕДЕР ================= -->
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="9" fill="#1B1C33"/>
+        <path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <div class="name">НОРНИКЕЛЬ</div>
+        <div class="sub">AI Science Hack</div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      Образец: <b>NN-2026-0473</b><br>
+      Дата анализа: <b>05.07.2026, 14:22</b><br>
+      Оператор: <b>авто-пайплайн v1.3</b>
+    </div>
+  </header>
+
+  <h1 class="title">Отчёт автоматической классификации руды</h1>
+  <div class="title-line"></div>
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div>
+      <div class="verdict-label">Класс руды</div>
+      <div class="verdict">Труднообогатимая</div>
+      <div class="verdict-sub">Тальк ≤ 10 %; в структуре сульфидов преобладают тонкие срастания с высокой степенью замещения нерудной фазой.</div>
+    </div>
+    <div class="conf">
+      <div class="n">94.2%</div>
+      <div class="l">уверенность</div>
+    </div>
+  </div>
+
+  <!-- ================= KPI ================= -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="k-lab">Доля сульфидов</div>
+      <div class="k-val">18.4<small>%</small></div>
+      <div class="k-bar"><i style="width:18.4%;background:linear-gradient(90deg,var(--c-common),var(--c-thin))"></i></div>
+    </div>
+    <div class="kpi">
+      <div class="k-lab">Доля талька</div>
+      <div class="k-val">6.8<small>%</small></div>
+      <div class="k-bar"><i style="width:68%;background:var(--c-talc)"></i></div>
+    </div>
+    <div class="kpi">
+      <div class="k-lab">Тонкие срастания<br>(от сульфидов)</div>
+      <div class="k-val">62<small>%</small></div>
+      <div class="k-bar"><i style="width:62%;background:var(--c-thin)"></i></div>
+    </div>
+    <div class="kpi">
+      <div class="k-lab">Сульфидных<br>включений</div>
+      <div class="k-val">1 247</div>
+      <div class="k-bar"><i style="width:80%;background:var(--violet)"></i></div>
+    </div>
+  </div>
+
+  <!-- ================= СЕТКА ================= -->
+  <div class="grid">
+
+    <!-- Фазовый состав: донат -->
+    <div class="card">
+      <h3>Фазовый состав кадра</h3>
+      <div style="display:flex;align-items:center;gap:14px">
+        <svg width="112" height="112" viewBox="0 0 42 42">
+          <!-- фон -->
+          <circle cx="21" cy="21" r="15.9155" fill="none" stroke="#EEF0F6" stroke-width="7"/>
+          <!-- сегменты: силикат 52.7, магнетит 22.1, сульфиды 18.4, тальк 6.8 -->
+          <circle cx="21" cy="21" r="15.9155" fill="none" stroke="var(--c-silic)" stroke-width="7"
+                  stroke-dasharray="52.7 47.3" stroke-dashoffset="25"/>
+          <circle cx="21" cy="21" r="15.9155" fill="none" stroke="var(--c-magn)" stroke-width="7"
+                  stroke-dasharray="22.1 77.9" stroke-dashoffset="-27.7"/>
+          <circle cx="21" cy="21" r="15.9155" fill="none" stroke="var(--c-thin)" stroke-width="7"
+                  stroke-dasharray="18.4 81.6" stroke-dashoffset="-49.8"/>
+          <circle cx="21" cy="21" r="15.9155" fill="none" stroke="var(--c-talc)" stroke-width="7"
+                  stroke-dasharray="6.8 93.2" stroke-dashoffset="-68.2"/>
+          <text x="21" y="20" text-anchor="middle" font-size="6.5" font-weight="800" fill="#1B1C33">100%</text>
+          <text x="21" y="26" text-anchor="middle" font-size="3.1" fill="#565A7A">площади</text>
+        </svg>
+        <div class="legend" style="flex-direction:column;gap:7px">
+          <div class="li"><span class="sw" style="background:var(--c-silic)"></span><b>Силикат</b> — 52.7%</div>
+          <div class="li"><span class="sw" style="background:var(--c-magn)"></span><b>Магнетит</b> — 22.1%</div>
+          <div class="li"><span class="sw" style="background:var(--c-thin)"></span><b>Сульфиды</b> — 18.4%</div>
+          <div class="li"><span class="sw" style="background:var(--c-talc)"></span><b>Тальк</b> — 6.8%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Структура срастаний -->
+    <div class="card">
+      <h3>Структура срастаний сульфидов</h3>
+      <div class="rows">
+        <div class="row">
+          <span class="rl">Обычные</span>
+          <span class="track"><i style="width:38%;background:var(--c-common)"></i></span>
+          <span class="rv">38%</span>
+        </div>
+        <div class="row">
+          <span class="rl">Тонкие</span>
+          <span class="track"><i style="width:62%;background:var(--c-thin)"></i></span>
+          <span class="rv">62%</span>
+        </div>
+      </div>
+      <div class="stat-note">
+        Обычные — крупные изолированные сульфиды с минимальным замещением (маркер рядовой руды).
+        Тонкие — сульфиды, существенно замещённые нерудной фазой (маркер труднообогатимой руды).
+        <b>Преобладание тонких срастаний → труднообогатимая руда.</b>
+      </div>
+    </div>
+
+    <!-- Дерево решения -->
+    <div class="card wide">
+      <h3>Логика классификации (экспертное правило)</h3>
+      <div class="flow">
+        <div class="node active">
+          <span class="tag">шаг 1</span>
+          <div class="q">Доля талька &gt; 10 %?</div>
+          6.8 % → <b>нет</b>. Оталькование исключено.
+        </div>
+        <div class="arrow">→</div>
+        <div class="node active">
+          <span class="tag">шаг 2</span>
+          <div class="q">Какие срастания преобладают?</div>
+          Тонкие 62 % &gt; обычные 38 %.
+        </div>
+        <div class="arrow">→</div>
+        <div class="node result">
+          <span class="tag">итог</span>
+          <div class="q" style="color:var(--c-thin)">Труднообогатимая руда</div>
+          Высокая степень замещения сульфидов магнетитом.
+        </div>
+      </div>
+    </div>
+
+    <!-- Степень замещения (gauge) -->
+    <div class="card">
+      <h3>Степень замещения нерудной фазой</h3>
+      <div class="gauge-wrap">
+        <svg width="120" height="70" viewBox="0 0 120 70">
+          <path d="M10 62 A50 50 0 0 1 110 62" fill="none" stroke="#EEF0F6" stroke-width="12" stroke-linecap="round"/>
+          <!-- 58% дуги (180deg) -->
+          <path d="M10 62 A50 50 0 0 1 110 62" fill="none" stroke="url(#g1)" stroke-width="12"
+                stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="66"/>
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="var(--c-common)"/><stop offset="1" stop-color="var(--c-thin)"/>
+          </linearGradient></defs>
+          <text x="60" y="56" text-anchor="middle" font-size="17" font-weight="800" fill="#1B1C33">58%</text>
+        </svg>
+        <div class="gauge-num">
+          Средняя доля площади сульфида,<br>замещённая тёмной фазой.<br>
+          <b>Индекс контакта S–магнетит: 0.71</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- Гистограмма размеров -->
+    <div class="card">
+      <h3>Распределение включений по размеру</h3>
+      <svg width="100%" height="72" viewBox="0 0 220 72" preserveAspectRatio="none">
+        <!-- ось -->
+        <line x1="6" y1="60" x2="214" y2="60" stroke="#E6E8F0" stroke-width="1"/>
+        <!-- бары: мелкие -> крупные -->
+        <g fill="var(--violet)">
+          <rect x="12"  y="18" width="20" height="42" rx="2"/>
+          <rect x="40"  y="8"  width="20" height="52" rx="2"/>
+          <rect x="68"  y="26" width="20" height="34" rx="2"/>
+          <rect x="96"  y="34" width="20" height="26" rx="2" fill="#7B4DFF"/>
+          <rect x="124" y="42" width="20" height="18" rx="2" fill="#7B4DFF"/>
+          <rect x="152" y="48" width="20" height="12" rx="2" fill="#9E79FF"/>
+          <rect x="180" y="53" width="20" height="7"  rx="2" fill="#9E79FF"/>
+        </g>
+      </svg>
+      <div class="stat-note">По оси X — размер включения (отн. ед. площади), по Y — количество.
+        Смещение к мелкой фракции согласуется с тонкими срастаниями. Медиана: <b>0.014 %</b> площади кадра.</div>
+    </div>
+
+  </div>
+
+  <!-- ================= ЗАКЛЮЧЕНИЕ ================= -->
+  <div class="verdict-box" style="margin-top:9px">
+    <b>Заключение.</b> Образец классифицирован как <b>труднообогатимая руда</b>.
+    Содержание талька — 6.8 % (порог оталькования 10 % не превышен). В структуре сульфидов
+    (18.4 % площади) преобладают тонкие срастания — 62 %, при средней степени замещения нерудной фазой 58 %.
+    Рекомендуется учитывать повышенные потери при флотационном обогащении.
+  </div>
+
+  <!-- ================= ЛЕГЕНДА МАСКИ ================= -->
+  <div class="legend" style="margin-top:9px;justify-content:center">
+    <span style="font-size:8.5px;color:var(--ink-2)">Цвета маски сегментации:</span>
+    <div class="li"><span class="sw" style="background:var(--c-common)"></span><b>обычные срастания</b></div>
+    <div class="li"><span class="sw" style="background:var(--c-thin)"></span><b>тонкие срастания</b></div>
+    <div class="li"><span class="sw" style="background:var(--c-talc)"></span><b>тальк</b></div>
+    <div class="li"><span class="sw" style="background:var(--c-magn)"></span><b>магнетит</b></div>
+    <div class="li"><span class="sw" style="background:var(--c-silic)"></span><b>силикат</b></div>
+  </div>
+
+  <!-- ================= ФУТЕР ================= -->
+  <footer>
+    <span>Норникель · AI Science Hack 2026 · Автоматическая классификация руд по OM-изображениям</span>
+    <span class="mono">model: segformer-b3 · hash: 7f3a9c · разрешение: 9184×7712 px · t=142 c</span>
+  </footer>
+
+ </div>
+</div>
+</body>
+</html>

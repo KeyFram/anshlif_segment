@@ -1,0 +1,368 @@
+:root {
+  --bg: #0f1115;
+  --panel: #161a21;
+  --panel-2: #1b2029;
+  --border: #2a3140;
+  --text: #d8dde6;
+  --muted: #7a8497;
+  --accent: #4cb3ff;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  height: 100vh;
+}
+
+.sidebar {
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+.sidebar h2 {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 1;
+}
+.sidebar .group {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar .group-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 14px;
+}
+.sidebar ul { list-style: none; padding: 0; margin: 0; }
+.sidebar li {
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+}
+.sidebar li:hover { background: var(--panel-2); }
+.sidebar li.active {
+  background: var(--accent);
+  color: #001120;
+}
+
+.editor {
+  display: grid;
+  grid-template-rows: 44px 1fr 80px;
+  overflow: hidden;
+}
+.toolbar, .phases {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+.phases {
+  border-bottom: none;
+  border-top: 1px solid var(--border);
+}
+
+.toolbar .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.toolbar .seg button {
+  background: transparent; color: var(--muted); border: none;
+  padding: 6px 14px; font: inherit; cursor: pointer;
+}
+.toolbar .seg button:hover { color: var(--text); background: var(--panel-2); }
+.toolbar .seg button.active { background: var(--accent); color: #001120; }
+.toolbar .sep { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
+.toolbar .tb-btn {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px; font-size: 16px; line-height: 1;
+  cursor: pointer; min-width: 32px;
+}
+.toolbar .tb-btn:disabled { color: #4a5263; cursor: not-allowed; }
+.toolbar .tb-text {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 12px; font: inherit; cursor: pointer;
+}
+.toolbar .tb-text:hover:not(:disabled) { background: var(--panel-2); }
+.toolbar .tb-text:disabled { color: #4a5263; cursor: not-allowed; }
+.toolbar .tb-text.ok { border-color: #2f7a44; color: #7cd99a; }
+.toolbar .tb-text.err { border-color: #7a2f3a; color: #f88; }
+.toolbar .tb-text.active { background: var(--accent); color: #001120; border-color: var(--accent); }
+.toolbar .wand-thresh { display: inline-flex; align-items: center; gap: 8px; }
+.toolbar .wand-thresh .lbl { color: var(--muted); font-size: 12px; }
+.toolbar .wand-thresh input[type=range] { width: 120px; accent-color: var(--accent); cursor: pointer; }
+.toolbar .wand-thresh input[type=number] {
+  width: 48px; background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px; padding: 3px 6px; font: inherit;
+}
+.toolbar .tb-check { display: inline-flex; align-items: center; gap: 6px; color: var(--text); cursor: pointer; font-size: 12px; white-space: nowrap; }
+.toolbar .tb-check input { accent-color: var(--accent); cursor: pointer; margin: 0; }
+/* Compact sliders so the wand's three controls fit on one toolbar row. */
+.toolbar .wand-thresh.thin { gap: 6px; }
+.toolbar .wand-thresh.thin input[type=range] { width: 84px; }
+.toolbar .wand-thresh.thin input[type=number] { width: 40px; }
+/* Foreground "colour" box for the target phase. Unscoped so it works both in
+   the top toolbar (lasso/wand/brush) and the colour-range side panel. */
+.target-box { position: relative; display: inline-flex; align-items: center; gap: 8px; }
+.target-box .lbl { color: var(--muted); font-size: 12px; }
+.target-current {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 4px 8px; font: inherit; cursor: pointer;
+}
+.target-current:hover { border-color: var(--accent); }
+.target-current .swatch {
+  width: 20px; height: 20px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
+}
+.target-current .name { min-width: 48px; text-align: left; }
+.target-current .chev { color: var(--muted); font-size: 10px; }
+.target-menu {
+  position: absolute; top: calc(100% + 4px); left: 0; z-index: 60;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px; min-width: 180px; max-height: 320px; overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+/* Open upward when there isn't room below (e.g. near the bottom of the side panel). */
+.target-menu.up { top: auto; bottom: calc(100% + 4px); }
+.target-menu-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: transparent; border: none; color: var(--text);
+  padding: 6px 8px; border-radius: 4px; cursor: pointer; font: inherit; text-align: left;
+}
+.target-menu-item:hover { background: var(--panel-2); }
+.target-menu-item.current { outline: 1px solid var(--accent); }
+.target-menu-item .swatch {
+  width: 16px; height: 16px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0;
+}
+
+.toolbar .tb-hint { color: var(--muted); margin-left: auto; font-size: 12px; }
+.toolbar kbd {
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 3px;
+  padding: 1px 6px; font-family: ui-monospace, Consolas, monospace; font-size: 11px;
+}
+
+.canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(45deg, #181c22 25%, transparent 25%),
+    linear-gradient(-45deg, #181c22 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #181c22 75%),
+    linear-gradient(-45deg, transparent 75%, #181c22 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+  background-color: #11141a;
+}
+/* Only the direct drawing canvases are full-bleed — NOT canvases nested in
+   overlay panels (e.g. the colour-range preview). */
+.canvas-wrap > canvas { display: block; position: absolute; inset: 0; }
+.canvas-wrap .placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  pointer-events: none;
+}
+/* Higher specificity than `.canvas-wrap canvas { inset: 0 }` so the HUD keeps
+   its corner placement instead of being stretched to fill. */
+.canvas-wrap canvas.perf-hud {
+  position: absolute;
+  inset: auto 10px auto auto;   /* top/right corner */
+  top: 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 2;
+}
+.canvas-hud {
+  position: absolute;
+  left: 10px; bottom: 10px;
+  background: rgba(15, 17, 21, 0.78);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  display: flex; gap: 8px;
+  color: var(--muted);
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.phases { gap: 10px; }
+
+/* Influence-zones field: a separate block on the left with the on/off toggle. */
+.influence-field {
+  display: flex; flex-direction: column; justify-content: center; gap: 6px;
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px;
+  flex-shrink: 0;
+}
+.influence-field.on { border-color: var(--accent); }
+.influence-title { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch .track {
+  width: 36px; height: 20px; border-radius: 10px; flex-shrink: 0;
+  background: var(--panel); border: 1px solid var(--border); position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+.switch .thumb {
+  position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--muted); transition: left 0.15s, background 0.15s;
+}
+.switch input:checked + .track { background: rgba(76,179,255,0.25); border-color: var(--accent); }
+.switch input:checked + .track .thumb { left: 18px; background: var(--accent); }
+.switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 1px; }
+.switch .state { font-size: 12px; color: var(--muted); }
+
+.phases-sep { width: 1px; height: 48px; background: var(--border); flex-shrink: 0; }
+.phases-list { display: flex; align-items: center; gap: 10px; overflow-x: auto; flex: 1; min-width: 0; }
+
+.phase-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--panel-2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 6px; flex-shrink: 0;
+}
+.phase-chip.protected { opacity: 0.5; }
+.phase-add {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; flex-shrink: 0;
+  background: transparent; color: var(--muted);
+  border: 1px dashed var(--border); border-radius: 4px;
+  font-size: 18px; line-height: 1; cursor: pointer;
+}
+.phase-add:hover { color: var(--accent); border-color: var(--accent); }
+.phase-chip .phase-influence { accent-color: var(--accent); cursor: pointer; margin: 0; }
+/* In influence mode the whole chip toggles; clicks on the name/checkbox fall
+   through to the chip, and the chip shows a pointer + hover affordance. */
+.phase-chip.clickable { cursor: pointer; }
+.phase-chip.clickable:hover { border-color: var(--accent); }
+.phase-chip.clickable .phase-name { pointer-events: none; }
+.phase-chip.clickable .phase-influence { pointer-events: none; }
+.phase-swatch {
+  width: 28px; height: 28px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer; position: relative; overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
+}
+.phase-swatch input[type=color] {
+  position: absolute; inset: -4px; opacity: 0; cursor: pointer;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  border: none; padding: 0;
+}
+.phase-name {
+  background: transparent; color: var(--text); border: none;
+  font: inherit; padding: 4px 6px; min-width: 60px; width: 80px;
+  border-radius: 3px;
+}
+.phase-name:focus { background: var(--bg); outline: 1px solid var(--accent); }
+
+.region-menu {
+  position: fixed;
+  z-index: 50;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.region-menu-title {
+  font-size: 11px; color: var(--muted); text-transform: uppercase;
+  padding: 6px 8px 4px;
+}
+.region-menu-item {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; background: transparent; border: none; color: var(--text);
+  padding: 6px 8px; border-radius: 4px; cursor: pointer; font: inherit;
+  text-align: left;
+}
+.region-menu-item:hover { background: var(--panel-2); }
+.region-menu-item .swatch {
+  width: 16px; height: 16px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.region-menu-item .name { flex: 1; }
+.region-menu-item .badge {
+  font-size: 10px; color: var(--muted); text-transform: uppercase;
+}
+.region-menu-item.current { color: var(--muted); }
+.canvas-wrap { cursor: default; }
+.canvas-wrap > canvas { cursor: inherit; }
+.canvas-wrap.tool-lasso { cursor: crosshair; }
+.canvas-wrap.tool-brush { cursor: crosshair; }
+.canvas-wrap.tool-colorrange { cursor: crosshair; }
+.canvas-wrap.panning, .canvas-wrap.panning * { cursor: grabbing !important; }
+
+/* Colour-range side panel (slides over the right of the canvas). */
+.cr-panel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 268px; z-index: 5;
+  background: var(--panel); border-left: 1px solid var(--border);
+  padding: 12px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px;
+  font-size: 12px; cursor: default;
+}
+.cr-title { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.cr-eyedroppers { display: flex; gap: 6px; }
+.cr-pick {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 4px; padding: 7px 8px; cursor: pointer; font: inherit;
+}
+.cr-pick:hover { border-color: var(--accent); }
+.cr-pick .dot { width: 8px; height: 8px; border-radius: 50%; background: #6bd06b; }
+.cr-pick.minus .dot { background: #ff6b6b; }
+.cr-pick.active { border-color: var(--accent); background: var(--accent); color: #001120; }
+.cr-pick.active .dot { outline: 1px solid #001120; }
+.cr-row { display: flex; align-items: center; gap: 8px; }
+.cr-lbl { color: var(--muted); white-space: nowrap; }
+.cr-row input[type=range] { flex: 1; accent-color: var(--accent); cursor: pointer; }
+.cr-val { width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+.cr-preview { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.cr-preview > canvas { border: 1px solid var(--border); border-radius: 4px; }
+.cr-strip { width: 100%; height: 16px; }
+.cr-samples { display: flex; flex-wrap: wrap; gap: 5px; }
+.cr-swatch {
+  width: 22px; height: 22px; border-radius: 4px; cursor: pointer; padding: 0;
+  border: 2px solid #6bd06b; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
+}
+.cr-swatch.exc { border-color: #ff6b6b; }
+.cr-count { color: var(--muted); }
+.cr-reset, .cr-fill, .cr-brush {
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 4px; padding: 7px 10px; cursor: pointer; font: inherit;
+}
+.cr-reset:hover, .cr-fill:hover:not(:disabled), .cr-brush:hover:not(:disabled) { background: #232a36; }
+.cr-fill:disabled, .cr-brush:disabled { color: #4a5263; cursor: not-allowed; }
+.cr-fill { border-color: #2f7a44; }
+.cr-brush { border-color: var(--accent); }
+.cr-sep { height: 1px; background: var(--border); margin: 2px 0; }
+.cr-target { display: flex; flex-direction: column; gap: 6px; }
+.cr-actions { display: flex; gap: 6px; }
+.cr-actions button { flex: 1; }
+.cr-muted { color: var(--muted); }
+.toolbar .seg .tb-btn { /* no-op */ }
+.toolbar .busy { color: var(--accent); margin-left: 6px; }
