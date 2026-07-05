@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Презентация · Скажи мне, кто твой шлиф</title>
+<style>
+:root{
+  --violet:#5B2FE0; --violet-2:#7B4DFF; --mint:#3DE0B0; --ink:#1B1C33; --ink-2:#565A7A;
+  --line:#E6E8F0; --bg-card:#FFF; --page:#F4F6FA;
+  --c-common:#22B573; --c-thin:#E8465B; --c-talc:#3B82F6; --c-magn:#3A3E55; --c-silic:#C7CEDB;
+  --sulf:#E7C74A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#3a3d55;font-family:'Segoe UI',Inter,Arial,sans-serif;color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+@page{size:13.333in 7.5in;margin:0}
+
+.slide{
+  position:relative;width:1280px;height:720px;background:var(--page);overflow:hidden;
+  page-break-after:always;margin:0 auto;
+}
+.slide:last-child{page-break-after:auto}
+/* screen view spacing */
+@media screen{ body{padding:24px 0} .slide{margin:0 auto 26px;box-shadow:0 12px 40px rgba(0,0,0,.35)} }
+
+/* decorative blobs */
+.blob-mint::before{content:"";position:absolute;top:-260px;right:-190px;width:520px;height:520px;
+  background:radial-gradient(circle,rgba(61,224,176,.42),rgba(61,224,176,0) 62%);z-index:0}
+.blob-violet::after{content:"";position:absolute;bottom:-210px;left:-170px;width:430px;height:430px;
+  background:radial-gradient(circle,rgba(91,47,224,.14),rgba(91,47,224,0) 65%);z-index:0}
+.layer{position:relative;z-index:1;width:100%;height:100%;padding:52px 60px;display:flex;flex-direction:column}
+
+/* header / brand */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .logo{width:38px;height:38px}
+.brand .name{font-weight:800;letter-spacing:.6px;font-size:16px;line-height:1}
+.brand .sub{font-size:9px;color:var(--ink-2);letter-spacing:1.8px;text-transform:uppercase;margin-top:3px}
+.chip{font-size:11px;color:var(--violet);background:rgba(91,47,224,.08);border:1px solid rgba(91,47,224,.2);
+  padding:5px 12px;border-radius:20px;font-weight:600}
+
+/* titles */
+.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--violet);font-weight:700;margin-bottom:8px}
+h1.t{font-size:30px;font-weight:800;line-height:1.12;letter-spacing:-.2px}
+h1.t .hl{color:var(--violet)}
+.uline{width:54px;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--mint),var(--violet));margin:12px 0 22px}
+
+/* footer */
+.foot{position:absolute;left:60px;right:60px;bottom:26px;display:flex;justify-content:space-between;
+  align-items:center;font-size:10px;color:var(--ink-2);z-index:2}
+.foot .dots{display:flex;gap:5px}
+.foot .dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.foot .dots i.on{background:var(--violet);width:16px;border-radius:3px}
+
+/* generic cards */
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.card h3{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.card h3::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--mint);flex:none}
+.muted{color:var(--ink-2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.frame{border-radius:14px;border:1px solid var(--line);overflow:hidden;background:#0d0f1a;
+  box-shadow:0 10px 26px rgba(27,28,51,.16)}
+.frame img{display:block;width:100%;height:100%;object-fit:cover}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:var(--ink-2)}
+.legend .li{display:flex;align-items:center;gap:6px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:none;border:1px solid rgba(0,0,0,.12)}
+.legend b{color:var(--ink);font-weight:600}
+b.v{color:var(--violet)}
+
+/* pills / kpi */
+.kpi{background:var(--bg-card);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.kpi .kl{font-size:10px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.6px}
+.kpi .kv{font-size:26px;font-weight:800;margin-top:4px}
+.kpi .kv small{font-size:14px;color:var(--ink-2);font-weight:700}
+
+/* ============ SLIDE 1 : TITLE ============ */
+.title-wrap{display:flex;height:100%;align-items:center;gap:46px}
+.title-left{flex:1.15}
+.title-right{flex:.85;display:flex;flex-direction:column;gap:12px}
+.hero-title{font-size:52px;font-weight:800;line-height:1.02;letter-spacing:-1px;margin:18px 0 14px}
+.hero-title .hl{background:linear-gradient(90deg,var(--violet),var(--violet-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{font-size:18px;color:var(--ink-2);line-height:1.45;max-width:560px}
+.hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.tag{font-size:12px;padding:7px 14px;border-radius:20px;font-weight:600}
+.tag.solid{background:var(--ink);color:#fff}
+.tag.mint{background:rgba(61,224,176,.16);color:#0f8a63;border:1px solid rgba(61,224,176,.4)}
+.tag.line{border:1px solid var(--line);color:var(--ink-2)}
+.demo{margin-top:26px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(120deg,var(--violet),var(--violet-2));
+  color:#fff;padding:12px 20px;border-radius:12px;font-size:15px;font-weight:700;box-shadow:0 10px 26px rgba(91,47,224,.3)}
+.split-frame{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 18px 44px rgba(27,28,51,.3);aspect-ratio:4/3}
+.split-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.split-frame .maskimg{clip-path:polygon(0 0,50% 0,50% 100%,0 100%)}
+.split-frame .divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--mint);z-index:3}
+.split-frame .lab{position:absolute;bottom:10px;font-size:11px;font-weight:700;color:#fff;
+  background:rgba(0,0,0,.55);padding:4px 10px;border-radius:6px;z-index:4}
+
+/* problem cards */
+.pain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px}
+.pain .card{padding:16px}
+.pain .ico{width:34px;height:34px;border-radius:9px;background:rgba(232,70,91,.1);color:var(--c-thin);
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:9px}
+.pain h4{font-size:14px;font-weight:700;margin-bottom:5px}
+.pain p{font-size:12px;color:var(--ink-2);line-height:1.45}
+.quote{margin-top:16px;background:linear-gradient(120deg,rgba(61,224,176,.14),rgba(91,47,224,.09));
+  border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.5;font-style:italic}
+.quote b{color:var(--violet);font-style:normal}
+
+/* value props */
+.vp{display:flex;flex-direction:column;gap:11px}
+.vp .row{display:flex;gap:12px;align-items:flex-start}
+.vp .n{flex:none;width:28px;height:28px;border-radius:8px;background:var(--violet);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.vp .row h4{font-size:14px;font-weight:700;margin-bottom:2px}
+.vp .row p{font-size:12px;color:var(--ink-2);line-height:1.4}
+
+/* flow (pipeline) */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:8px}
+.fnode{flex:1;position:relative;background:#fff;border:1.5px solid var(--line);border-radius:12px;
+  padding:14px 12px;text-align:center;margin:0 5px}
+.fnode .fi{font-size:20px;margin-bottom:6px}
+.fnode .fn{font-weight:700;font-size:12.5px;margin-bottom:4px}
+.fnode .fd{font-size:10.5px;color:var(--ink-2);line-height:1.35}
+.fnode.hot{border-color:var(--violet);background:rgba(91,47,224,.05)}
+.farr{align-self:center;color:var(--violet);font-weight:800;font-size:18px;flex:none;margin:0 -1px}
+.pipe-note{margin-top:16px;display:flex;gap:12px}
+.pipe-note .card{flex:1;padding:13px 15px}
+
+/* science two-col */
+.sci{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1}
+.sci .card{display:flex;flex-direction:column}
+.sci .badge{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;padding:4px 10px;border-radius:20px;align-self:flex-start;margin-bottom:10px}
+.sci .b-src{background:rgba(58,62,85,.1);color:var(--ink-2)}
+.sci .b-our{background:linear-gradient(120deg,var(--violet),var(--violet-2));color:#fff}
+.sci h3.big{font-size:17px;font-weight:800;margin-bottom:8px}
+.sci ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sci li{font-size:12.5px;color:var(--ink-2);line-height:1.4;padding-left:18px;position:relative}
+.sci li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:2px;background:var(--mint)}
+.sci li b{color:var(--ink)}
+.arrow-mid{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);z-index:5;
+  width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;box-shadow:0 8px 20px rgba(27,28,51,.3)}
+.sci-note{margin-top:14px;background:var(--ink);color:#fff;border-radius:12px;padding:13px 18px;font-size:13px;line-height:1.5}
+.sci-note b{color:var(--mint)}
+
+/* seg palette */
+.pal{display:flex;flex-direction:column;gap:10px}
+.pal .prow{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.pal .sw{width:26px;height:26px;border-radius:7px;flex:none;border:1px solid rgba(0,0,0,.15)}
+.pal .pn{font-weight:700;font-size:14px}
+.pal .pd{font-size:11px;color:var(--ink-2)}
+.callout{background:linear-gradient(120deg,rgba(91,47,224,.1),rgba(61,224,176,.12));border:1px solid rgba(91,47,224,.25);
+  border-radius:12px;padding:13px 16px;font-size:12.5px;line-height:1.5}
+.callout .h{font-weight:800;color:var(--violet);display:block;margin-bottom:3px}
+
+/* tiling diagram */
+.tilegrid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:6px;
+  aspect-ratio:3/2;padding:10px;background:#0d0f1a;border-radius:12px}
+.tilegrid .t{border:2px dashed rgba(61,224,176,.55);border-radius:6px;background:rgba(91,47,224,.18);
+  display:flex;align-items:center;justify-content:center;color:#cbd0ff;font-size:12px;font-weight:700}
+
+/* requirements table */
+.rtbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.rtbl th{text-align:left;color:var(--ink-2);font-weight:600;padding:7px 10px;border-bottom:2px solid var(--line);
+  text-transform:uppercase;font-size:10px;letter-spacing:.5px}
+.rtbl td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.rtbl tr:last-child td{border-bottom:none}
+.ok{color:var(--c-common);font-weight:700;white-space:nowrap}
+.rtbl .how{color:var(--ink-2)}
+
+/* decision tree */
+.tree{display:flex;flex-direction:column;gap:9px}
+.tstep{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:12px 14px}
+.tstep .q{font-size:12.5px;flex:1}.tstep .q b{color:var(--ink)}
+.tstep.talc{border-color:var(--c-talc);background:rgba(59,130,246,.06)}
+.tstep.thin{border-color:var(--c-thin);background:rgba(232,70,91,.06)}
+.tstep.common{border-color:var(--c-common);background:rgba(34,181,115,.06)}
+.tstep .res{font-weight:800;font-size:13px}
+.tstep.talc .res{color:var(--c-talc)}.tstep.thin .res{color:var(--c-thin)}.tstep.common .res{color:var(--c-common)}
+
+/* tools chips */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tool{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tool .ti{flex:none;width:30px;height:30px;border-radius:8px;background:rgba(91,47,224,.1);color:var(--violet);
+  display:flex;align-items:center;justify-content:center;font-size:15px}
+.tool h4{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.tool p{font-size:10.5px;color:var(--ink-2);line-height:1.35}
+
+/* report mini */
+.rep-hero{background:linear-gradient(120deg,var(--violet),var(--violet-2));color:#fff;border-radius:14px;
+  padding:16px 20px;display:flex;align-items:center;gap:18px}
+.rep-hero .vl{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+.rep-hero .vv{font-size:24px;font-weight:800;margin-top:3px}
+.rep-hero .vs{font-size:11px;opacity:.9;margin-top:5px;max-width:340px;line-height:1.4}
+.rep-hero .side{margin-left:auto;text-align:center}
+.rep-hero .side .n{font-size:34px;font-weight:800;line-height:1}
+.rep-hero .side .l{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:.85}
+.donut-legend{display:flex;flex-direction:column;gap:7px;font-size:12px}
+
+/* stack + roadmap */
+.stack-badges{display:flex;flex-wrap:wrap;gap:8px}
+.sb{font-size:11.5px;padding:6px 12px;border-radius:8px;background:#fff;border:1px solid var(--line);font-weight:600;color:var(--ink-2)}
+.road{display:flex;flex-direction:column;gap:9px}
+.road .r{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.road .r .d{flex:none;width:8px;height:8px;border-radius:50%;background:var(--mint);margin-top:6px}
+.road .r b{color:var(--ink)}
+.links{display:flex;flex-direction:column;gap:10px}
+.link{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 15px}
+.link .li{flex:none;width:32px;height:32px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.link .lk{font-size:10px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.6px}
+.link .lv{font-size:14px;font-weight:700}
+.link .lv.ph{color:var(--ink-2);font-weight:500;font-style:italic}
+</style>
+</head>
+<body>
+
+<!-- ============ SLIDE 1 · TITLE ============ -->
+<section class="slide blob-mint blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div>
+      </div>
+      <div class="chip">Задача 3 · Микроскопия</div>
+    </div>
+
+    <div class="title-wrap">
+      <div class="title-left">
+        <div class="eyebrow">Автоматическая классификация руд</div>
+        <div class="hero-title">«Скажи мне,<br>кто твой <span class="hl">шлиф</span>»</div>
+        <div class="hero-sub">End-to-end веб-система сегментации минеральных фаз и классификации руды по панорамным OM-снимкам полированных аншлифов.</div>
+        <div class="hero-tags">
+          <span class="tag solid">Qwen-Image-Edit + LoRA</span>
+          <span class="tag mint">4 минеральные фазы</span>
+          <span class="tag line">Ручной редактор маски</span>
+          <span class="tag line">PDF-отчёт по руде</span>
+        </div>
+        <div class="demo">🌐 Живое демо — nornikel.key-frame.ru</div>
+      </div>
+      <div class="title-right">
+        <div class="split-frame">
+          <img class="origimg" src="img/orig_011.jpg" alt="original">
+          <img class="maskimg" src="img/mask_011.png" alt="mask">
+          <div class="divider"></div>
+          <span class="lab" style="left:10px">снимок</span>
+          <span class="lab" style="right:10px">маска фаз</span>
+        </div>
+        <div class="muted" style="font-size:11px;text-align:center">одним движением: RLM-микрофотография → цветовая маска фаз</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 · PROBLEM ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">01 · Проблема</div>
+    </div>
+    <div class="eyebrow">Как это делается сейчас</div>
+    <h1 class="t">Классификация руды держится <span class="hl">на глазах эксперта</span></h1>
+    <div class="uline"></div>
+
+    <div class="pain">
+      <div class="card"><div class="ico">?</div><h4>Субъективность</h4><p>Разные геологи по-разному читают характер срастаний и долю талька — воспроизводимость между лабораториями падает.</p></div>
+      <div class="card"><div class="ico">⏳</div><h4>Трудоёмкость</h4><p>Ручная сегментация и подсчёт площадей фаз на снимках высокого разрешения — <b>часы</b> на один образец.</p></div>
+      <div class="card"><div class="ico">▦</div><h4>Масштаб</h4><p>Панорамы до нескольких <b>гигапикселей</b>; партии из десятков и сотен шлифов превращают анализ в бутылочное горлышко.</p></div>
+      <div class="card"><div class="ico">%</div><h4>Нет точных долей</h4><p>«Преобладание» обычных или тонких срастаний на глаз не даёт процентов для технологических карт.</p></div>
+      <div class="card"><div class="ico">☀</div><h4>Вариативность данных</h4><p>Разное освещение, контраст, царапины и артефакты полировки ломают жёсткие пороговые алгоритмы.</p></div>
+      <div class="card" style="background:var(--ink);border:none;color:#fff"><div class="ico" style="background:rgba(61,224,176,.18);color:var(--mint)">→</div><h4 style="color:#fff">Нужна система</h4><p style="color:rgba(255,255,255,.8)">Объективная, быстрая, масштабируемая — и <b style="color:var(--mint)">проверяемая</b> геологом.</p></div>
+    </div>
+
+    <div class="quote">«Решение должно корректно отражать <b>геологическую логику классификации</b>, а не просто максимизировать метрики сегментации» — <span class="muted">ключевое требование задания</span></div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i class="on"></i><i></i><i></i><i></i></span></div>
+</section>
+
+<!-- ============ SLIDE 3 · SOLUTION OVERVIEW ============ -->
+<section class="slide blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">02 · Решение</div>
+    </div>
+    <div class="eyebrow">Что мы сделали</div>
+    <h1 class="t">Веб-система <span class="hl">от снимка до вердикта</span> по руде</h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:26px;flex:1;align-items:center">
+      <div class="frame" style="flex:1.35;aspect-ratio:16/10"><img src="img/ui_preview.png" alt="интерфейс превью"></div>
+      <div class="vp" style="flex:.9">
+        <div class="row"><div class="n">1</div><div><h4>Загрузил — получил маску</h4><p>Одиночные снимки и панорамы, пакетная обработка. Нейросеть раскрашивает минеральные фазы.</p></div></div>
+        <div class="row"><div class="n">2</div><div><h4>Интерпретируемо</h4><p>Цветовая маска поверх снимка + живая настройка классификации. Геолог видит, где что.</p></div></div>
+        <div class="row"><div class="n">3</div><div><h4>Правится вручную</h4><p>Полноценный редактор маски: лассо, палочка, кисть, цветовой диапазон — режим экспертной проверки.</p></div></div>
+        <div class="row"><div class="n">4</div><div><h4>Готовый отчёт</h4><p>Класс руды, фазовый состав, метрики → PDF и ZIP. Работает локально с конфиденциальными данными.</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i class="on"></i><i></i><i></i></span></div>
+</section>
+
+<!-- ============ SLIDE 4 · SCIENCE ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">03 · Научный подход</div>
+    </div>
+    <div class="eyebrow">Сегментация как генерация · «generation = understanding»</div>
+    <h1 class="t">Подход <span class="hl">Vision Banana</span> — под задачу Норникеля</h1>
+    <div class="uline"></div>
+
+    <div class="sci" style="position:relative">
+      <div class="card">
+        <span class="badge b-src">Вдохновение · Google DeepMind</span>
+        <h3 class="big">Vision Banana</h3>
+        <ul>
+          <li>Instruction-tuning генеративной модели <b>Nano Banana Pro</b> (Gemini 3 Pro Image).</li>
+          <li>Все vision-задачи (сегментация, глубина, нормали) — как <b>генерация RGB-картинки</b>, декодируемой обратно в маску.</li>
+          <li>Без новых модулей и голов — одна модель <b>обходит SAM 3 и Depth Anything V3</b>.</li>
+          <li>Авторы — He Kaiming и Xie Saining. Идея: генеративная модель уже «понимает» изображение.</li>
+        </ul>
+      </div>
+      <div class="arrow-mid">→</div>
+      <div class="card" style="border-color:rgba(91,47,224,.3)">
+        <span class="badge b-our">Наша реализация</span>
+        <h3 class="big">Qwen-Image-Edit-2511 + LoRA</h3>
+        <ul>
+          <li>Тот же приём для домена, где готового SAM нет: дообучили <b>LoRA</b> на <b>250 вручную размеченных аншлифах</b>.</li>
+          <li>Обучение — несколько часов на <b>H100</b>; на входе фото + промпт с описанием фаз, на выходе — цветовая маска.</li>
+          <li>Инференс на сайте — через <b>fal.ai</b> (без своего GPU), ~5–13 с на вызов: быстро и дёшево.</li>
+          <li>Модель отделяет структуру фаз; чистоту цветов даёт постобработка.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sci-note">💡 Мы не строили классический сегментатор с нуля — мы <b>перенесли самый свежий приём генеративного зрения</b> (ноябрь 2025) на реальную геологическую задачу, где размеченных данных единицы.</div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i class="on"></i><i></i></span></div>
+</section>
+
+<!-- ============ SLIDE 5 · PIPELINE ============ -->
+<section class="slide blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">04 · Пайплайн</div>
+    </div>
+    <div class="eyebrow">End-to-end обработка</div>
+    <h1 class="t">Единый конвейер: <span class="hl">фото → класс руды</span></h1>
+    <div class="uline"></div>
+
+    <div class="flow">
+      <div class="fnode"><div class="fi">📤</div><div class="fn">Загрузка</div><div class="fd">TIFF / PNG / JPEG, метаданные (µm/px, съёмка, месторождение)</div></div>
+      <div class="farr">›</div>
+      <div class="fnode"><div class="fi">⚖️</div><div class="fn">Нормализация</div><div class="fd">normalize_v4: убирает цветовой каст и экспозицию</div></div>
+      <div class="farr">›</div>
+      <div class="fnode"><div class="fi">▦</div><div class="fn">Тайлинг</div><div class="fd">панорамы → тайлы 2208×1656 с оверлапом</div></div>
+      <div class="farr">›</div>
+      <div class="fnode hot"><div class="fi">🧠</div><div class="fn">Нейросеть</div><div class="fd">Qwen-Image-Edit + LoRA через fal.ai</div></div>
+      <div class="farr">›</div>
+      <div class="fnode"><div class="fi">✨</div><div class="fn">Постобработка</div><div class="fd">clean_edges + snap к палитре 4 фаз</div></div>
+      <div class="farr">›</div>
+      <div class="fnode"><div class="fi">🗺️</div><div class="fn">Маска фаз</div><div class="fd">обратно в нативное разрешение, бесшовно</div></div>
+      <div class="farr">›</div>
+      <div class="fnode"><div class="fi">📄</div><div class="fn">Отчёт</div><div class="fd">класс руды, метрики, PDF / ZIP</div></div>
+    </div>
+
+    <div class="pipe-note">
+      <div class="card"><h3>Два уровня «интеллекта»</h3><p class="muted" style="font-size:12px;line-height:1.5">Сначала нейросеть отделяет <b class="v">4 минеральные фазы</b>. Затем детерминированный слой считает геометрию сульфидов и применяет <b class="v">экспертное правило</b> классификации руды — прозрачно и проверяемо.</p></div>
+      <div class="card"><h3>Почему связка сильная</h3><p class="muted" style="font-size:12px;line-height:1.5">Нормализация даёт <b class="v">устойчивость к съёмке</b>, тайлинг — <b class="v">масштаб до гигапикселей</b>, постобработка — <b class="v">чистые границы</b>, а fal.ai снимает требование локального GPU.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 6 · 4-PHASE SEGMENTATION ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">05 · Сегментация</div>
+    </div>
+    <div class="eyebrow">Что выдаёт модель</div>
+    <h1 class="t">Пофазное отделение: <span class="hl">4 минеральные фазы</span></h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:22px;flex:1">
+      <div style="flex:1.25;display:flex;gap:12px">
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div class="frame" style="aspect-ratio:4/3"><img src="img/orig_011.jpg"></div><div class="muted" style="font-size:11px;text-align:center;font-weight:600">RLM-снимок аншлифа</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div class="frame" style="aspect-ratio:4/3"><img src="img/mask_011.png"></div><div class="muted" style="font-size:11px;text-align:center;font-weight:600">маска из 4 цветов</div></div>
+      </div>
+      <div style="flex:.9;display:flex;flex-direction:column;gap:12px">
+        <div class="pal">
+          <div class="prow"><span class="sw" style="background:#3c3c3c"></span><div><div class="pn">Силикат</div><div class="pd">нерудная матрица, тёмно-серая</div></div></div>
+          <div class="prow"><span class="sw" style="background:#f0dc82"></span><div><div class="pn">Сульфиды</div><div class="pd">самая светлая фаза — ценный компонент</div></div></div>
+          <div class="prow"><span class="sw" style="background:#78c8ff"></span><div><div class="pn">Магнетит</div><div class="pd">угловатые серо-сиреневые зёрна</div></div></div>
+          <div class="prow"><span class="sw" style="background:#111"></span><div><div class="pn">Тальк</div><div class="pd">тёмная рассеянная фаза, чёрным</div></div></div>
+        </div>
+        <div class="callout"><span class="h">🎯 Магнетит — наш отдельный ход</span>Его не просили выделять. Но это <b>пустая порода</b>, визуально и генетически иная, чем силикат. Свести их в одну фазу — <b>исказить доли сульфидов и талька</b>. Мы вывели магнетит в отдельную фазу — это предметная точность, а не «ещё один класс ради метрики».</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 7 · NORMALIZATION ============ -->
+<section class="slide blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">06 · Робастность</div>
+    </div>
+    <div class="eyebrow">Устойчивость к вариациям данных</div>
+    <h1 class="t">Нормализация <span class="hl">normalize_v4</span> — до нейросети</h1>
+    <div class="uline"></div>
+
+    <div class="grid2" style="flex:1;align-items:stretch">
+      <div class="card">
+        <h3>Стадия 1 · Цветовой каст</h3>
+        <p class="muted" style="font-size:12.5px;line-height:1.55">Аффинный подгон каналов <b class="v">R и B под G</b> по малонасыщенным (серым) пикселям — <b>2 итерации</b>, чтобы каст не маскировал сам себя. Форму гистограммы не трогаем, только растяжение + сдвиг.</p>
+        <div style="margin-top:12px;height:34px;border-radius:8px;background:linear-gradient(90deg,#6b7a5a,#8a9270,#a8b090);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">зелёный каст «до»</div>
+        <div style="margin-top:6px;height:34px;border-radius:8px;background:linear-gradient(90deg,#4a4a4a,#7a7a7a,#a8a8a8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">нейтральный баланс «после»</div>
+      </div>
+      <div class="card">
+        <h3>Стадия 2 · Экспозиция</h3>
+        <p class="muted" style="font-size:12.5px;line-height:1.55">Чёрная и белая точки по перцентилям <b class="v">0.3% / 99.7%</b> яркости, растяжка к <b>эталону</b> одинаково по всем каналам — цвет не искажается, засветы и провалы уходят.</p>
+        <div style="margin-top:12px;height:34px;border-radius:8px;background:linear-gradient(90deg,#1a1a1a,#2a2a2a,#3a3a3a);display:flex;align-items:center;justify-content:center;color:#aaa;font-size:11px;font-weight:700">тёмный кадр «до»</div>
+        <div style="margin-top:6px;height:34px;border-radius:8px;background:linear-gradient(90deg,#0a0a0a,#606060,#e8e8e8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">полный диапазон «после»</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:14px"><span class="h">Зачем это критично</span>Модель обучена на едином балансе. Приводя каждый кадр к эталону, мы закрываем требование <b>устойчивости к разному освещению, контрасту и артефактам полировки</b> — без хрупких пороговых правил.</div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 8 · PANORAMAS ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">07 · Масштаб</div>
+    </div>
+    <div class="eyebrow">Гигапиксели — не проблема</div>
+    <h1 class="t">Панорамы: <span class="hl">тайлинг с бесшовной сборкой</span></h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:24px;flex:1;align-items:center">
+      <div style="flex:.85">
+        <div class="tilegrid">
+          <div class="t">1</div><div class="t">2</div><div class="t">3</div>
+          <div class="t">4</div><div class="t">5</div><div class="t">6</div>
+        </div>
+        <div class="muted" style="font-size:11px;text-align:center;margin-top:8px">оверлап ≥ 144 px между тайлами · сборка по срединным швам</div>
+      </div>
+      <div style="flex:1.15;display:flex;flex-direction:column;gap:11px">
+        <div class="card"><h3>Нарезка</h3><p class="muted" style="font-size:12px;line-height:1.5">Снимок с большой стороной <b class="v">> 5000 px</b> → панорама. Режем на тайлы <b class="v">2208×1656</b> с гарантированным перекрытием, чтобы фазы на стыках не терялись.</p></div>
+        <div class="card"><h3>Инференс + апскейл</h3><p class="muted" style="font-size:12px;line-height:1.5">Каждый тайл нормализуется от единой панорамы, уходит в модель, маска возвращается в нативное разрешение бикубиком с переснапом к палитре.</p></div>
+        <div class="card"><h3>Бесшовная пересборка</h3><p class="muted" style="font-size:12px;line-height:1.5">Тайлы обрезаются по <b class="v">cropBox</b> (без перекрытия) и склеиваются в цельное полотно — <b>без видимых швов</b>. Цель: до 10000×10000 ≤ 5 минут.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 9 · GEOLOGICAL LOGIC ============ -->
+<section class="slide blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">08 · Геология</div>
+    </div>
+    <div class="eyebrow">Не метрики, а предметная логика</div>
+    <h1 class="t">Competition-маска + <span class="hl">экспертное правило</span></h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:22px;flex:1">
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+        <div class="frame" style="aspect-ratio:16/11"><img src="img/ui_preview.png"></div>
+        <div class="legend" style="justify-content:center">
+          <div class="li"><span class="sw" style="background:#22B573"></span><b>обычные срастания</b></div>
+          <div class="li"><span class="sw" style="background:#E8465B"></span><b>тонкие срастания</b></div>
+          <div class="li"><span class="sw" style="background:#3B82F6"></span><b>тальк</b></div>
+        </div>
+        <p class="muted" style="font-size:11.5px;line-height:1.45;text-align:center">Из сульфидов выделяем тонкие срастания по <b>площади</b> и <b>толщине ≈ площадь/периметр</b> (ловит ветвистые). Пороги настраиваются вживую на каждый файл.</p>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px">
+        <div class="tree">
+          <div class="tstep talc"><div class="q"><b>Шаг 1.</b> Доля талька &gt; 10 %?</div><div class="res">→ Оталькованная</div></div>
+          <div style="text-align:center;color:var(--ink-2);font-size:12px">↓ если талька ≤ 10 %</div>
+          <div class="tstep thin"><div class="q"><b>Шаг 2.</b> Преобладают тонкие срастания?</div><div class="res">→ Труднообогатимая</div></div>
+          <div style="text-align:center;color:var(--ink-2);font-size:12px">↓ иначе</div>
+          <div class="tstep common"><div class="q"><b>Итог.</b> Преобладают обычные (крупные)</div><div class="res">→ Рядовая</div></div>
+        </div>
+        <div class="callout" style="font-size:12px">Правило <b>прозрачно и детерминированно</b> — геолог видит каждый порог и агрегат по всем снимкам проекта, а не «чёрный ящик» с числом на выходе.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 10 · MANUAL EDITOR ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">09 · Интерпретируемость</div>
+    </div>
+    <div class="eyebrow">Режим экспертной проверки · active learning</div>
+    <h1 class="t">Геолог <span class="hl">проверяет и правит</span> маску</h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:22px;flex:1;align-items:center">
+      <div class="frame" style="flex:1.3;aspect-ratio:16/9"><img src="img/ui_editor.png"></div>
+      <div class="tools" style="flex:1">
+        <div class="tool"><div class="ti">✦</div><div><h4>Магнитное лассо</h4><p>Live-wire по границам фаз, считается в web worker</p></div></div>
+        <div class="tool"><div class="ti">✷</div><div><h4>Волшебная палочка</h4><p>Выбор по цветовому сходству с порогом</p></div></div>
+        <div class="tool"><div class="ti">✎</div><div><h4>Кисть</h4><p>Свободная правка целевой фазой</p></div></div>
+        <div class="tool"><div class="ti">◉</div><div><h4>Цветовой диапазон</h4><p>Вектороскоп Cb-Cr, пипетки +/−</p></div></div>
+        <div class="tool"><div class="ti">🔒</div><div><h4>Зоны влияния</h4><p>Защита готовых фаз от случайной правки</p></div></div>
+        <div class="tool"><div class="ti">↶</div><div><h4>Undo/redo · автосейв</h4><p>Привязка к фиксированной палитре фаз</p></div></div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:12px;font-size:12px"><span class="h">Зачем</span>Задание требует интерпретируемости и ручной коррекции. Правки геолога — это готовый материал для <b>дообучения модели</b> (active learning) на новых типах руд.</div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 11 · REPORT & EXPORT ============ -->
+<section class="slide blob-violet">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">10 · Результат</div>
+    </div>
+    <div class="eyebrow">Готово к лабораторному пайплайну</div>
+    <h1 class="t">Отчёт и <span class="hl">экспорт результатов</span></h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:20px;flex:1">
+      <div style="flex:1.25;display:flex;flex-direction:column;gap:12px">
+        <div class="rep-hero">
+          <div><div class="vl">Класс руды по проекту</div><div class="vv">Труднообогатимая руда</div><div class="vs">В структуре сульфидов преобладают тонкие срастания — повышенные потери при обогащении.</div></div>
+          <div class="side"><div class="n">PDF</div><div class="l">print-ready A4</div></div>
+        </div>
+        <div class="grid3">
+          <div class="kpi"><div class="kl">Доля сульфидов</div><div class="kv">по площади</div></div>
+          <div class="kpi"><div class="kl">Доля талька</div><div class="kv">порог 10<small>%</small></div></div>
+          <div class="kpi"><div class="kl">Тонкие срастания</div><div class="kv">% от сульфидов</div></div>
+        </div>
+        <div class="card"><h3>Что внутри отчёта</h3><p class="muted" style="font-size:12px;line-height:1.55">Фазовый состав (донат), структура срастаний, логика классификации, распределение включений по размеру, сводка по изображениям и текстовое заключение — всё на реальных метриках, без «уверенности» и выдуманных чисел.</p></div>
+      </div>
+      <div style="flex:.85;display:flex;flex-direction:column;gap:12px">
+        <div class="frame" style="border-color:var(--line);background:#12141f;aspect-ratio:4/3"><img src="img/ui_export.png" style="object-fit:contain;background:#1a1c2b"></div>
+        <div class="card"><h3>Экспорт ZIP</h3><div class="legend" style="flex-direction:column;gap:7px"><div class="li"><span class="sw" style="background:var(--violet)"></span><b>Маска фаз</b> — обязательно</div><div class="li"><span class="sw" style="background:var(--mint)"></span><b>Наложение</b> на оригинал</div><div class="li"><span class="sw" style="background:var(--ink-2)"></span><b>Оригинал</b> (опционально)</div></div><p class="muted" style="font-size:11px;margin-top:8px">Панорамы склеиваются в цельное полотно, а не по тайлам.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 12 · HONEST METRICS + COMPLIANCE ============ -->
+<section class="slide blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">11 · Честно о точности</div>
+    </div>
+    <div class="eyebrow">Почему мы не показываем F1</div>
+    <h1 class="t">Про метрики — <span class="hl">честно</span></h1>
+    <div class="uline"></div>
+
+    <div style="display:flex;gap:20px;flex:1">
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+        <div class="card" style="border-color:rgba(232,70,91,.3)">
+          <h3 style="--x:0"><span style="width:9px;height:9px;border-radius:2px;background:var(--c-thin);display:inline-block"></span>Эталонов не было</h3>
+          <p class="muted" style="font-size:12.5px;line-height:1.55">Пиксельных эталонных масок организаторы <b>не выдавали</b>. Разметка шла <b>фломастером поверх фото в Paint</b> — цветной линией по срастаниям. Пиксель-в-пиксель сравнивать <b>не с чем</b>: посчитать честный F1 / IoU физически невозможно.</p>
+        </div>
+        <div class="callout"><span class="h">Наш ответ</span>Мы сознательно <b>не подгоняем красивые цифры</b>, а делаем ставку на два проверяемых столпа: <b>предметную геологическую логику</b> и <b>интерпретируемость</b> — геолог сам верифицирует и правит маску. Это ровно то, что просит задание.</div>
+        <div class="quote" style="margin-top:0">«...корректно отражать <b>геологическую логику</b>, а не просто максимизировать метрики сегментации»</div>
+      </div>
+      <div style="flex:1.05">
+        <div class="card" style="height:100%">
+          <h3>Соответствие требованиям задания</h3>
+          <table class="rtbl">
+            <thead><tr><th>Требование</th><th>Статус</th></tr></thead>
+            <tbody>
+              <tr><td>Устойчивость к вариациям данных<div class="how">освещение, контраст, артефакты</div></td><td class="ok">✓ normalize_v4</td></tr>
+              <tr><td>Интерпретируемость<div class="how">визуальная проверка + правка</div></td><td class="ok">✓ маска + редактор</td></tr>
+              <tr><td>Практическая интеграция<div class="how">от TIFF/PNG до отчёта</div></td><td class="ok">✓ ZIP + PDF</td></tr>
+              <tr><td>Локальное развёртывание<div class="how">конфиденциальные данные</div></td><td class="ok">✓ self-hosted</td></tr>
+              <tr><td>Пакетная обработка<div class="how">серии без участия юзера</div></td><td class="ok">✓ batch</td></tr>
+              <tr><td>Адаптация к новым рудам<div class="how">transfer learning</div></td><td class="ok">✓ LoRA + active learning</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Скажи мне, кто твой шлиф · Норникель AI Science Hack</span><span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i></span></div>
+</section>
+
+<!-- ============ SLIDE 13 · STACK / ROADMAP / LINKS ============ -->
+<section class="slide blob-violet blob-mint">
+  <div class="layer">
+    <div class="top">
+      <div class="brand"><svg class="logo" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="9" fill="#1B1C33"/><path d="M12 28V12l16 16V12" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><div class="name">НОРНИКЕЛЬ</div><div class="sub">AI Science Hack</div></div></div>
+      <div class="chip">12 · Стек · Планы · Ссылки</div>
+    </div>
+    <div class="eyebrow">Технологии и что дальше</div>
+    <h1 class="t">Собрано на проверенном стеке — <span class="hl">и готово расти</span></h1>
+    <div class="uline"></div>
+
+    <div class="grid3" style="flex:1;align-items:start">
+      <div class="card" style="height:100%">
+        <h3>Стек</h3>
+        <div class="stack-badges">
+          <span class="sb">React + Vite + TS</span><span class="sb">Express</span><span class="sb">Python</span>
+          <span class="sb">numpy · opencv</span><span class="sb">scipy · scikit-image</span><span class="sb">Pillow · jinja2</span>
+          <span class="sb">sharp</span><span class="sb">fal.ai</span><span class="sb">Qwen-Image-Edit + LoRA</span><span class="sb">Caddy · TLS</span>
+        </div>
+        <h3 style="margin-top:16px">Web-воркеры</h3>
+        <p class="muted" style="font-size:11.5px;line-height:1.5">Live-wire лассо и magic wand считаются в отдельном потоке — UI остаётся отзывчивым даже на снимках 40× зума.</p>
+      </div>
+      <div class="card" style="height:100%">
+        <h3>Roadmap</h3>
+        <div class="road">
+          <div class="r"><span class="d"></span><div><b>Абсолютные площади</b> — µm/pixel → мкм² вместо только процентов.</div></div>
+          <div class="r"><span class="d"></span><div><b>Экспорт в ГИС</b> — GeoJSON / Shapefile для геоинформационных систем.</div></div>
+          <div class="r"><span class="d"></span><div><b>Карта уверенности</b> — heatmap вероятностей для спорных участков.</div></div>
+          <div class="r"><span class="d"></span><div><b>Дообучение</b> — правки геолога → новые типы руд и другое оборудование.</div></div>
+          <div class="r"><span class="d"></span><div><b>XRD-домен</b> — вторая вкладка уже заложена в архитектуру.</div></div>
+        </div>
+      </div>
+      <div class="card" style="height:100%">
+        <h3>Ссылки</h3>
+        <div class="links">
+          <div class="link"><div class="li">🌐</div><div><div class="lk">Живое демо</div><div class="lv">nornikel.key-frame.ru</div></div></div>
+          <div class="link"><div class="li">⌥</div><div><div class="lk">Исходный код (VCS)</div><div class="lv ph">github — ссылка</div></div></div>
+          <div class="link"><div class="li">▦</div><div><div class="lk">Облачный диск · архив + видео</div><div class="lv ph">ссылка на диск</div></div></div>
+          <div class="link"><div class="li">🧠</div><div><div class="lk">Модель · HF-репо</div><div class="lv">nornikel-qwen-ore-seg</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px;background:var(--ink);color:#fff;border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:17px;font-weight:800">Спасибо! Готовы показать вживую 🔬</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.7)">Скажи мне, кто твой шлиф · Норникель AI Science Hack · Задача 3</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

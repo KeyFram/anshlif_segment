@@ -129,6 +129,16 @@ def run_pool(tasks, rb, rw, workers, label):
     if not tasks: return 0
     t0 = time.time(); done = 0; errs = 0; n = len(tasks)
     args = [(pin, pout, rb, rw) for pin, pout in tasks]
+    # NORMALIZE_SERIAL — гнать без ProcessPoolExecutor. Нужно, когда процесс идёт
+    # под SYSTEM/сессией 0 (планировщик), где спавн multiprocessing-воркеров
+    # не работает. Для пер-загрузочной нормализации (мало файлов) серийно ок.
+    if os.environ.get("NORMALIZE_SERIAL") or workers <= 1:
+        for a in args:
+            pin, err = process(a)
+            done += 1
+            if err: errs += 1; print("ERR", pin, err, flush=True)
+        print(f"[{label}] {done}/{n} serial errs={errs}", flush=True)
+        return errs
     with ProcessPoolExecutor(max_workers=workers) as ex:
         for pin, err in ex.map(process, args):
             done += 1

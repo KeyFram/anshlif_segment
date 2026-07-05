@@ -35,15 +35,23 @@ export function falConfigured(): boolean {
   return !!cfg("FAL_KEY") && !!cfg("LORA_URL");
 }
 
-/** Env dict handed to the Python segmentation subprocess. */
+/** Env dict handed to the Python subprocesses. If FAL_PROXY is set (e.g. the
+ *  deploy box reaches fal only via a local proxy), it's exported as HTTP(S)_PROXY
+ *  so fal_client/requests route through it. Left unset locally (TUN handles it). */
 export function pythonEnv(): NodeJS.ProcessEnv {
-  return {
+  const env: NodeJS.ProcessEnv = {
     ...process.env,
     PYTHONUTF8: "1",
     PYTHONIOENCODING: "utf-8",
     FAL_KEY: cfg("FAL_KEY") ?? "",
     LORA_URL: cfg("LORA_URL") ?? "",
   };
+  const proxy = cfg("FAL_PROXY");
+  if (proxy) {
+    env.HTTP_PROXY = proxy; env.HTTPS_PROXY = proxy; env.ALL_PROXY = proxy;
+    env.http_proxy = proxy; env.https_proxy = proxy; env.all_proxy = proxy;
+  }
+  return env;
 }
 
 export const PYTHON_BIN = cfg("PYTHON_BIN") || "python";

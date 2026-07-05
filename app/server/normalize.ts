@@ -3,10 +3,10 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { normDir, projectDir } from "./storage.ts";
+import { PYTHON_BIN, pythonEnv } from "./config.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPT = path.join(__dirname, "normalize", "normalize_v4.py");
-const PYTHON = process.env.PYTHON_BIN || "python";
 
 export type NormTask = { src: string; key: string };
 
@@ -26,19 +26,26 @@ export async function normalizeBatch(projectId: string, tasks: NormTask[]): Prom
 
   // Stage each source under a flat, key-named copy so the script's output
   // (always <basename>.jpg) maps back to norm/<key>.jpg deterministically.
+  let staged = 0;
   for (const t of tasks) {
-    if (!fs.existsSync(t.src)) continue;
+    if (!fs.existsSync(t.src)) { console.error("[norm] src missing:", t.src); continue; }
     fs.copyFileSync(t.src, path.join(inDir, t.key + path.extname(t.src)));
+    staged++;
   }
+  console.log(`[norm] ${staged}/${tasks.length} staged in ${inDir}`);
 
   try {
-    await runPython([SCRIPT, inDir, outDir]);
+    const r = await runPython([SCRIPT, inDir, outDir]);
+    console.log(`[norm] python exit=${r.code} out=${r.out.slice(-300).trim()} err=${r.err.slice(-300).trim()}`);
+    console.log(`[norm] outDir contents: ${fs.existsSync(outDir) ? fs.readdirSync(outDir).join(",") : "(missing)"}`);
     const nd = normDir(projectId);
     fs.mkdirSync(nd, { recursive: true });
+    let moved = 0;
     for (const t of tasks) {
       const produced = path.join(outDir, `${t.key}.jpg`);
-      if (fs.existsSync(produced)) fs.renameSync(produced, path.join(nd, `${t.key}.jpg`));
+      if (fs.existsSync(produced)) { fs.renameSync(produced, path.join(nd, `${t.key}.jpg`)); moved++; }
     }
+    console.log(`[norm] moved ${moved}/${tasks.length} to norm/`);
   } catch (e) {
     console.error("normalize failed (norm previews will fall back to originals):", e);
   } finally {
@@ -60,18 +67,20 @@ export async function normalizeWhole(srcPath: string, dstPath: string): Promise<
   }
 }
 
-function runPython(args: string[]): Promise<void> {
+function runPython(args: string[]): Promise<{ code: number; out: string; err: string }> {
   return new Promise((resolve, reject) => {
-    const p = spawn(PYTHON, args, {
-      env: { ...process.env, PYTHONUTF8: "1", PYTHONIOENCODING: "utf-8" },
+    const p = spawn(PYTHON_BIN, args, {
+      // NORMALIZE_SERIAL: multiprocessing pool doesn't spawn under SYSTEM/session 0.
+      env: { ...pythonEnv(), NORMALIZE_SERIAL: "1" },
       stdio: ["ignore", "pipe", "pipe"],
     });
-    let err = "";
+    let out = "", err = "";
+    p.stdout.on("data", (d) => { out += d.toString(); });
     p.stderr.on("data", (d) => { err += d.toString(); });
     p.on("error", reject);
     p.on("close", (code) => {
-      if (code === 0) resolve();
-      else reject(new Error(`python exit ${code}: ${err.slice(-500)}`));
+      if (code === 0) resolve({ code: code ?? 0, out, err });
+      else reject(new Error(`python exit ${code}: ${err.slice(-500)} | out: ${out.slice(-300)}`));
     });
   });
 }
